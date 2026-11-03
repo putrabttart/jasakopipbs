@@ -14,12 +14,14 @@ export const dynamic = 'force-dynamic';
 const KK_URL = `${KK_API_BASE_URL}/product/query_product_menu`;
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const brandCode = searchParams.get('brand') || 'kopi-kenangan';
   try {
     const sb = getSupabase();
-    let data = await getCatalogMenu(sb);
+    let data = await getCatalogMenu(sb, { brandCode });
     if (data.menu_groups.length === 0) {
-      await syncPublicCatalog(sb);
-      data = await getCatalogMenu(sb);
+      await syncPublicCatalog(sb, brandCode);
+      data = await getCatalogMenu(sb, { brandCode });
     }
     return NextResponse.json({ error_code: 0, data, source: 'local_catalog' });
   } catch (catalogError) {
@@ -31,13 +33,15 @@ export async function GET(request) {
     return NextResponse.json(
       {
         error_code: 1,
-        msg: 'Katalog lokal belum siap. Jalankan migrasi 008_local_catalog.sql.',
+        msg:
+          brandCode === 'fore-coffee'
+            ? 'Fore Coffee belum siap. Jalankan migrasi 010_multi_brand_fore.sql.'
+            : 'Katalog lokal belum siap. Jalankan migrasi 008 dan 010.',
       },
       { status: 503 }
     );
   }
 
-  const { searchParams } = new URL(request.url);
   const store_code = searchParams.get('store_code') || '';
 
   const body = {

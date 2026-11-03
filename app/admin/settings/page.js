@@ -218,6 +218,7 @@ function SectionModal({ title, onClose, children }) {
 /* ============== SECTIONS ============== */
 
 function CatalogSection() {
+  const [brand, setBrand] = useState('kopi-kenangan');
   const [groups, setGroups] = useState([]);
   const [syncInfo, setSyncInfo] = useState(null);
   const [activeGroup, setActiveGroup] = useState('');
@@ -229,7 +230,7 @@ function CatalogSection() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [brand]);
 
   function headers() {
     return { 'Content-Type': 'application/json', 'x-admin-password': sessionStorage.getItem('admin-auth') || '' };
@@ -238,7 +239,7 @@ function CatalogSection() {
   async function load() {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/catalog', { headers: headers() });
+      const res = await fetch(`/api/admin/catalog?brand=${encodeURIComponent(brand)}`, { headers: headers() });
       const json = await res.json();
       if (json.error_code !== 0) throw new Error(json.msg || 'Gagal memuat katalog');
       setGroups(json.data.menu_groups || []);
@@ -255,7 +256,11 @@ function CatalogSection() {
     setBusy(true);
     setMessage('');
     try {
-      const res = await fetch('/api/admin/catalog', { method: 'POST', headers: headers() });
+      const res = await fetch('/api/admin/catalog', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ brand }),
+      });
       const json = await res.json();
       if (json.error_code !== 0) throw new Error(json.msg || 'Sinkronisasi gagal');
       setMessage(`Sinkron selesai: ${json.data.categories} kategori, ${json.data.product_links} relasi produk.`);
@@ -332,6 +337,7 @@ function CatalogSection() {
 
   return (
     <div className="space-y-4">
+      <BrandSelector value={brand} onChange={(value) => { setBrand(value); setActiveGroup(''); setSelected(null); }} />
       <div className="rounded-2xl bg-white border border-ink-200 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -416,6 +422,7 @@ function CatalogInput({ label, value, onChange, type = 'text' }) {
 }
 
 function OutletsSection() {
+  const [brand, setBrand] = useState('kopi-kenangan');
   const [outlets, setOutlets] = useState([]);
   const [syncInfo, setSyncInfo] = useState(null);
   const [query, setQuery] = useState('');
@@ -426,7 +433,7 @@ function OutletsSection() {
 
   useEffect(() => {
     load('');
-  }, []);
+  }, [brand]);
 
   function headers() {
     return { 'Content-Type': 'application/json', 'x-admin-password': sessionStorage.getItem('admin-auth') || '' };
@@ -435,7 +442,7 @@ function OutletsSection() {
   async function load(search = query) {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/outlets?query=${encodeURIComponent(search)}&page_size=50`, { headers: headers() });
+      const res = await fetch(`/api/admin/outlets?brand=${encodeURIComponent(brand)}&query=${encodeURIComponent(search)}&page_size=50`, { headers: headers() });
       const json = await res.json();
       if (json.error_code !== 0) throw new Error(json.msg || 'Gagal memuat outlet');
       setOutlets(json.data.store || []);
@@ -451,7 +458,11 @@ function OutletsSection() {
     setBusy(true);
     setMessage('');
     try {
-      const res = await fetch('/api/admin/outlets', { method: 'POST', headers: headers() });
+      const res = await fetch('/api/admin/outlets', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ brand }),
+      });
       const json = await res.json();
       if (json.error_code !== 0) throw new Error(json.msg || 'Sinkronisasi gagal');
       setMessage(`Sinkron selesai: ${json.data.outlets} outlet Indonesia.`);
@@ -488,6 +499,7 @@ function OutletsSection() {
 
   return (
     <div className="space-y-4">
+      <BrandSelector value={brand} onChange={(value) => { setBrand(value); setSelected(null); setQuery(''); }} />
       <div className="rounded-2xl bg-white border border-ink-200 p-4">
         <div className="flex items-start justify-between gap-3">
           <div><p className="text-sm font-bold">Sumber Outlet Resmi</p><p className="text-[11px] text-ink-500 mt-1 break-all">{syncInfo?.source_url}</p><p className="text-[11px] text-ink-500 mt-1">Sinkron terakhir: {syncInfo?.last_synced_at ? new Date(syncInfo.last_synced_at).toLocaleString('id-ID') : 'Belum pernah'}</p></div>
@@ -514,6 +526,21 @@ function OutletsSection() {
           <div className="space-y-2">{outlets.map((outlet) => <button key={outlet.id} onClick={() => setSelected({ ...outlet })} className="w-full bg-white border border-ink-200 rounded-xl p-3 text-left flex gap-3"><div className="flex-1 min-w-0"><p className="text-xs font-semibold truncate">{outlet.name}</p><p className="text-[11px] text-ink-500 truncate">{outlet.city} · {outlet.address}</p></div><Icon.ChevronRight size={14} className="text-ink-400" /></button>)}</div>
         </>
       )}
+    </div>
+  );
+}
+
+function BrandSelector({ value, onChange }) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {[
+        ['kopi-kenangan', 'Kopi Kenangan'],
+        ['fore-coffee', 'Fore Coffee'],
+      ].map(([code, name]) => (
+        <button key={code} type="button" onClick={() => onChange(code)} className={'rounded-xl border px-3 py-2 text-xs font-semibold ' + (value === code ? 'bg-ink-900 text-white border-ink-900' : 'bg-white border-ink-200')}>
+          {name}
+        </button>
+      ))}
     </div>
   );
 }

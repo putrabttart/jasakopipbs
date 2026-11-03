@@ -8,6 +8,10 @@ import { Icon } from '@/components/Icons';
 import { useCart, rupiah, applyDiscount } from '@/components/CartContext';
 
 const PREVIEW_STORE_CODE = 'KK.BGR.RKRNCMYA';
+const BRANDS = [
+  { code: 'kopi-kenangan', name: 'Kopi Kenangan' },
+  { code: 'fore-coffee', name: 'Fore Coffee' },
+];
 
 const EXCLUDED_GROUP_KEYWORDS = ['promo', 'combo', 'bundle', 'paket'];
 const EXCLUDED_TYPE_CODES = [4004];
@@ -23,8 +27,12 @@ function isExcludedProduct(p) {
   return false;
 }
 
-export default function HomePage() {
+export default function HomePage({ searchParams }) {
   const { setStore } = useCart();
+  const initialBrand = BRANDS.some((item) => item.code === searchParams?.brand)
+    ? searchParams.brand
+    : 'kopi-kenangan';
+  const [brand] = useState(initialBrand);
 
   // Capture referral code dari URL ?ref=XXX
   useEffect(() => {
@@ -63,8 +71,12 @@ export default function HomePage() {
     async function load() {
       setPreviewLoading(true);
       setPreviewError('');
+      setPreviewMenu([]);
+      setActiveGroup(null);
       try {
-        const res = await fetch(`/api/menu?store_code=${PREVIEW_STORE_CODE}`);
+        const res = await fetch(
+          `/api/menu?brand=${encodeURIComponent(brand)}&store_code=${PREVIEW_STORE_CODE}`
+        );
         const json = await res.json();
         if (cancel) return;
         if (!res.ok || json.error_code !== 0) {
@@ -107,7 +119,7 @@ export default function HomePage() {
     return () => {
       cancel = true;
     };
-  }, []);
+  }, [brand]);
 
   async function search(q, pageIndex = 1, append = false) {
     if (!q.trim()) return;
@@ -117,7 +129,7 @@ export default function HomePage() {
     setSearched(true);
     try {
       const res = await fetch(
-        `/api/stores?query=${encodeURIComponent(q)}&page_index=${pageIndex}&page_size=20`
+        `/api/stores?brand=${encodeURIComponent(brand)}&query=${encodeURIComponent(q)}&page_index=${pageIndex}&page_size=20`
       );
       const json = await res.json();
       if (json.error_code !== 0) throw new Error(json.msg || 'Gagal memuat data');
@@ -174,9 +186,30 @@ export default function HomePage() {
 
   return (
     <main className="pb-24">
-      <Header title="Jasa Order Kopi Kenangan" subtitle="JasdorAja" />
+      <Header title="Jasa Order Kopi" subtitle="JasdorAja" />
 
       <div className="max-w-3xl mx-auto px-4 md:px-6 pt-3 md:pt-4">
+        <section className="mb-3">
+          <p className="text-[10px] uppercase tracking-wider font-semibold text-ink-500 mb-2">
+            Pilih Brand
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {BRANDS.map((item) => (
+              <a
+                key={item.code}
+                href={`/?brand=${encodeURIComponent(item.code)}`}
+                className={
+                  'rounded-xl border px-3 py-2.5 text-sm font-semibold text-center transition ' +
+                  (brand === item.code
+                    ? 'bg-ink-900 text-white border-ink-900'
+                    : 'bg-white text-ink-700 border-ink-200')
+                }
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+        </section>
         {/* Pilih Outlet CTA - prominent above search */}
         <section ref={searchSectionRef}>
           <button
@@ -191,7 +224,9 @@ export default function HomePage() {
               <p className="text-[10px] uppercase tracking-wider opacity-70 font-semibold">
                 Pilih Outlet
               </p>
-              <p className="text-sm font-bold mt-0.5">Cari outlet Kopi Kenangan terdekat</p>
+              <p className="text-sm font-bold mt-0.5">
+                Cari outlet {BRANDS.find((item) => item.code === brand)?.name} terdekat
+              </p>
             </div>
             <Icon.ChevronRight size={20} className="opacity-70" />
           </button>
@@ -384,7 +419,9 @@ export default function HomePage() {
           <section className="mt-6">
             <div className="flex items-baseline justify-between mb-3">
               <div>
-                <h3 className="text-base font-bold text-ink-900">Menu Kopi Kenangan</h3>
+                <h3 className="text-base font-bold text-ink-900">
+                  Menu {BRANDS.find((item) => item.code === brand)?.name}
+                </h3>
                 <p className="text-[11px] text-ink-500 mt-0.5">
                   Preview menu — pilih outlet untuk pesan
                 </p>
@@ -460,7 +497,7 @@ export default function HomePage() {
 function StoreCard({ store, onSelect }) {
   return (
     <Link
-      href={`/menu/${store.code}`}
+      href={`/menu/${store.code}?brand=${encodeURIComponent(store.brand_code || 'kopi-kenangan')}`}
       onClick={onSelect}
       className="group block rounded-2xl bg-white border border-ink-200 overflow-hidden hover:border-ink-900 transition fade-up"
     >

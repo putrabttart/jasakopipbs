@@ -5,8 +5,8 @@ import { StockProvider } from '@/components/StockGuard';
 import WelcomeModal from '@/components/WelcomeModal';
 
 export const metadata = {
-  title: 'Jasa Order Kopi Kenangan by Iqbal',
-  description: 'Jasa Order Kopi Kenangan by Iqbal — pesan kopi favoritmu dengan diskon 50% (maks Rp 35.000) lewat WhatsApp.',
+  title: 'Jasa Order Kopi by Iqbal',
+  description: 'Jasa order Kopi Kenangan dan Fore Coffee dengan diskon hingga 50% lewat WhatsApp.',
 };
 
 export const viewport = {

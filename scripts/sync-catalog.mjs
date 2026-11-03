@@ -12,6 +12,12 @@ if (!url || !key) {
 const sourceUrl =
   'https://kenanganglobal.com/career/kk-hr-career/menu?country=ID&lang=id';
 const sb = createClient(url, key, { auth: { persistSession: false } });
+const { data: brand, error: brandError } = await sb
+  .from('brands')
+  .select('id')
+  .eq('code', 'kopi-kenangan')
+  .single();
+if (brandError) throw brandError;
 const response = await fetch(sourceUrl, { headers: { accept: 'application/json' } });
 if (!response.ok) throw new Error(`Sumber publik gagal: HTTP ${response.status}`);
 const payload = await response.json();
@@ -24,6 +30,7 @@ for (const [categoryIndex, group] of payload.data.groups.entries()) {
   const { data: existingCategory } = await sb
     .from('catalog_categories')
     .select('*')
+    .eq('brand_id', brand.id)
     .eq('source_code', String(group.code))
     .maybeSingle();
   let category = existingCategory;
@@ -33,12 +40,13 @@ for (const [categoryIndex, group] of payload.data.groups.entries()) {
       .from('catalog_categories')
       .upsert(
         {
+          brand_id: brand.id,
           source_code: String(group.code),
           name: String(group.name || 'Tanpa Kategori'),
           sort_order: categoryIndex,
           is_active: true,
         },
-        { onConflict: 'source_code' }
+        { onConflict: 'brand_id,source_code' }
       )
       .select()
       .single();
@@ -51,10 +59,12 @@ for (const [categoryIndex, group] of payload.data.groups.entries()) {
     const { data: existing } = await sb
       .from('catalog_products')
       .select('*')
+      .eq('brand_id', brand.id)
       .eq('source_product_id', String(product.id))
       .maybeSingle();
     const input = {
       source_product_id: String(product.id),
+      brand_id: brand.id,
       product_code: String(product.code || `public-${product.id}`),
       bundle_code: product.bundle_code ? String(product.bundle_code) : null,
       name: String(product.name || 'Produk'),
@@ -74,7 +84,7 @@ for (const [categoryIndex, group] of payload.data.groups.entries()) {
       ? sb.from('catalog_products').select().eq('id', existing.id).single()
       : sb
           .from('catalog_products')
-          .upsert(input, { onConflict: 'source_product_id' })
+          .upsert(input, { onConflict: 'brand_id,source_product_id' })
           .select()
           .single();
     const { data: saved, error: productError } = await query;

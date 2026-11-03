@@ -286,6 +286,8 @@ export default function CheckoutPage() {
             code: store.code,
             name: store.name,
             address: store.address,
+            brand_code: store.brand_code || 'kopi-kenangan',
+            brand_name: store.brand_name || 'Kopi Kenangan',
           }
         : null,
       items: items.map((it) => ({

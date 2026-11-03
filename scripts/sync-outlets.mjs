@@ -16,10 +16,17 @@ if (payload?.error_code !== 0 || !Array.isArray(payload?.data?.outlets)) {
 }
 
 const sb = createClient(url, key, { auth: { persistSession: false } });
+const { data: brand, error: brandError } = await sb
+  .from('brands')
+  .select('id')
+  .eq('code', 'kopi-kenangan')
+  .single();
+if (brandError) throw brandError;
 const sourceOutlets = payload.data.outlets.filter((outlet) => outlet.country === 'ID');
 const { data: existing, error: existingError } = await sb
   .from('outlets')
   .select('*')
+  .eq('brand_id', brand.id)
   .eq('country', 'ID');
 if (existingError) throw existingError;
 const existingMap = new Map((existing || []).map((row) => [row.source_id, row]));
@@ -29,6 +36,7 @@ for (let offset = 0; offset < sourceOutlets.length; offset += 200) {
     const current = existingMap.get(String(outlet.id));
     const imported = {
       source_id: String(outlet.id),
+      brand_id: brand.id,
       code: String(outlet.id),
       name: String(outlet.name || '').trim(),
       country: 'ID',
@@ -58,7 +66,9 @@ for (let offset = 0; offset < sourceOutlets.length; offset += 200) {
       manual_override: true,
     };
   });
-  const { error } = await sb.from('outlets').upsert(rows, { onConflict: 'source_id' });
+  const { error } = await sb
+    .from('outlets')
+    .upsert(rows, { onConflict: 'brand_id,source_id' });
   if (error) throw error;
 }
 

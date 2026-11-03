@@ -14,14 +14,16 @@ export async function GET(request) {
   }
   try {
     const { searchParams } = new URL(request.url);
+    const brandCode = searchParams.get('brand') || 'kopi-kenangan';
     const sb = getSupabase();
     const [outlets, sync] = await Promise.all([
       searchLocalOutlets(sb, {
         query: searchParams.get('query') || '',
         pageIndex: searchParams.get('page_index') || 1,
         pageSize: searchParams.get('page_size') || 50,
+        brandCode,
       }),
-      getOutletSyncInfo(sb),
+      getOutletSyncInfo(sb, brandCode),
     ]);
     return NextResponse.json({ error_code: 0, data: { ...outlets, sync } });
   } catch (e) {
@@ -34,7 +36,8 @@ export async function POST(request) {
     return NextResponse.json({ error_code: 1, msg: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const info = await syncPublicOutlets(getSupabase());
+    const body = await request.json().catch(() => ({}));
+    const info = await syncPublicOutlets(getSupabase(), body.brand || 'kopi-kenangan');
     return NextResponse.json({ error_code: 0, data: info });
   } catch (e) {
     return NextResponse.json({ error_code: 1, msg: e.message || 'Gagal sinkronisasi outlet' }, { status: 500 });

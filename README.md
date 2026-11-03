@@ -62,6 +62,7 @@ supabase-migrations/006_payment_timeout.sql
 supabase-migrations/007_referral_relax.sql
 supabase-migrations/008_local_catalog.sql
 supabase-migrations/009_local_outlets.sql
+supabase-migrations/010_multi_brand_fore.sql
 ```
 
 Setiap file harus selesai tanpa error sebelum menjalankan file berikutnya.
@@ -140,6 +141,7 @@ npm run start
 npm run lint
 npm run catalog:sync
 npm run outlets:sync
+npm run fore:sync
 ```
 
 - `npm run dev`: menjalankan development server.
@@ -151,6 +153,8 @@ npm run outlets:sync
   `.env.local` melalui `--env-file`.
 - `npm run outlets:sync`: bootstrap/sinkronisasi outlet Indonesia dari feed
   publik website resmi setelah migrasi `009` dijalankan.
+- `npm run fore:sync`: sinkronisasi menu dan outlet Fore Coffee setelah migrasi
+  `010` dijalankan. Token baca diambil otomatis dari source halaman resmi Fore.
 
 Untuk menguji mode production secara lokal:
 
@@ -232,6 +236,7 @@ Tabel yang dibuat migrasi:
 - `catalog_products`: produk, harga, gambar, dan status katalog lokal.
 - `catalog_product_categories`: relasi produk dengan kategori.
 - `outlets`: direktori outlet lokal, alamat, koordinat, dan jam operasional.
+- `brands`: daftar brand aktif, saat ini Kopi Kenangan dan Fore Coffee.
 
 Bucket yang dibuat migrasi:
 
@@ -251,7 +256,7 @@ di-restart setelah environment berubah.
 ### `relation ... does not exist`
 
 Migrasi belum lengkap atau dijalankan tidak berurutan. Jalankan seluruh file
-`001` sampai `009` dan gunakan query verifikasi di dokumentasi migrasi.
+`001` sampai `010` dan gunakan query verifikasi di dokumentasi migrasi.
 
 ### Upload gagal karena bucket tidak ditemukan
 
@@ -281,6 +286,20 @@ Outlet kosong otomatis mencoba bootstrap saat pencarian pertama. Admin dapat
 memicu sinkronisasi dari **Settings > Data Outlet**. Outlet yang diedit admin
 ditandai `manual_override` sehingga tidak ditimpa sinkronisasi berikutnya.
 Outlet yang sudah hilang dari sumber dinonaktifkan, bukan dihapus.
+
+### Mengaktifkan Fore Coffee
+
+Jalankan `010_multi_brand_fore.sql`, kemudian:
+
+```bash
+npm run fore:sync
+```
+
+Alternatifnya, pilih Fore Coffee pada **Admin > Settings > Katalog Menu** dan
+**Data Outlet**, lalu tekan **Sinkronkan** di masing-masing bagian. Adapter Fore
+membaca token publik terbaru dari halaman WordPress resmi sebelum mengambil
+data. Saat sumber Fore berubah atau tidak tersedia, data lokal terakhir tetap
+digunakan.
 
 ### QRIS belum tersedia
 

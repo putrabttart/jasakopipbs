@@ -19,6 +19,7 @@ Editor**:
 | 7 | `007_referral_relax.sql` | Policy referral final yang dipakai aplikasi saat ini. |
 | 8 | `008_local_catalog.sql` | Kategori, produk, relasi katalog lokal, RLS, dan metadata sinkronisasi publik. |
 | 9 | `009_local_outlets.sql` | Direktori outlet lokal, koordinat, RLS, dan metadata sinkronisasi publik. |
+| 10 | `010_multi_brand_fore.sql` | Dukungan multi-brand, seed Fore Coffee, index gabungan brand, dan metadata sinkronisasi Fore. |
 
 File menggunakan `IF NOT EXISTS`, `CREATE OR REPLACE`, atau `ON CONFLICT`
 sehingga dapat dijalankan ulang pada instalasi normal. Tetap lakukan backup
@@ -76,12 +77,13 @@ WHERE table_schema = 'public'
     'catalog_categories',
     'catalog_products',
     'catalog_product_categories',
-    'outlets'
+    'outlets',
+    'brands'
   )
 ORDER BY table_name;
 ```
 
-Hasilnya harus berisi dua belas tabel.
+Hasilnya harus berisi tiga belas tabel.
 
 Periksa konfigurasi:
 
@@ -136,7 +138,8 @@ WHERE pg_namespace.nspname = 'public'
     'catalog_categories',
     'catalog_products',
     'catalog_product_categories',
-    'outlets'
+    'outlets',
+    'brands'
   )
 ORDER BY relname;
 ```
@@ -147,7 +150,7 @@ Semua nilai `relrowsecurity` harus `true`.
 
 Untuk project development yang boleh kehilangan seluruh data, cara paling aman
 adalah membuat project Supabase baru lalu menjalankan ulang migrasi `001` sampai
-`009`. Jangan menjalankan `DROP TABLE` atau menghapus bucket pada database
+`010`. Jangan menjalankan `DROP TABLE` atau menghapus bucket pada database
 production tanpa backup dan rencana pemulihan.
 
 ## Perubahan Skema Berikutnya

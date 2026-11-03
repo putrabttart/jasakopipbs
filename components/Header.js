@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useCart } from './CartContext';
 import { Icon } from './Icons';
 
-export default function Header({ title, subtitle, back, showCart = true }) {
+export default function Header({ title, subtitle, back, showCart = true, logoUrl, logoAlt }) {
   const { totalQty } = useCart();
 
   return (
@@ -24,8 +24,8 @@ export default function Header({ title, subtitle, back, showCart = true }) {
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-xl bg-white border border-ink-200 grid place-items-center shrink-0 overflow-hidden">
               <img
-                src="https://cdn.kopikenangan.com/image/new_home/kopi-kenangan-v2.png"
-                alt="Kopi Kenangan"
+                src={logoUrl || 'https://cdn.kopikenangan.com/image/new_home/kopi-kenangan-v2.png'}
+                alt={logoAlt || 'JasdorAja'}
                 className="w-full h-full object-contain p-1"
               />
             </div>
@@ -34,7 +34,7 @@ export default function Header({ title, subtitle, back, showCart = true }) {
                 {subtitle || 'JasdorAja'}
               </p>
               <h1 className="text-sm md:text-base font-semibold text-ink-900 truncate leading-tight mt-0.5">
-                {title || 'Jasa Order Kopi Kenangan'}
+                {title || 'Jasa Order Kopi'}
               </h1>
             </div>
           </Link>

@@ -14,9 +14,11 @@ export async function GET(request) {
   }
   try {
     const sb = getSupabase();
+    const { searchParams } = new URL(request.url);
+    const brandCode = searchParams.get('brand') || 'kopi-kenangan';
     const [catalog, sync] = await Promise.all([
-      getCatalogMenu(sb, { includeInactive: true }),
-      getCatalogSyncInfo(sb),
+      getCatalogMenu(sb, { includeInactive: true, brandCode }),
+      getCatalogSyncInfo(sb, brandCode),
     ]);
     return NextResponse.json({ error_code: 0, data: { ...catalog, sync } });
   } catch (e) {
@@ -32,7 +34,8 @@ export async function POST(request) {
     return NextResponse.json({ error_code: 1, msg: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const info = await syncPublicCatalog(getSupabase());
+    const body = await request.json().catch(() => ({}));
+    const info = await syncPublicCatalog(getSupabase(), body.brand || 'kopi-kenangan');
     return NextResponse.json({ error_code: 0, data: info });
   } catch (e) {
     return NextResponse.json(

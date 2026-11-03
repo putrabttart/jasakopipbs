@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import OptionsModal from '@/components/OptionsModal';
 import DiscountCapModal from '@/components/DiscountCapModal';
@@ -26,6 +27,8 @@ function isExcludedProduct(p) {
 
 export default function MenuPage({ params }) {
   const storeCode = decodeURIComponent(params.storeCode);
+  const searchParams = useSearchParams();
+  const brandCode = searchParams.get('brand') || 'kopi-kenangan';
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -133,8 +136,12 @@ export default function MenuPage({ params }) {
     async function load() {
       setLoading(true);
       setError('');
+      setData(null);
+      setActiveGroup(null);
       try {
-        const res = await fetch(`/api/menu?store_code=${encodeURIComponent(storeCode)}`);
+        const res = await fetch(
+          `/api/menu?brand=${encodeURIComponent(brandCode)}&store_code=${encodeURIComponent(storeCode)}`
+        );
         const json = await res.json();
         if (cancel) return;
         if (json.error_code !== 0) throw new Error(json.msg || 'Gagal memuat menu');
@@ -149,7 +156,7 @@ export default function MenuPage({ params }) {
     return () => {
       cancel = true;
     };
-  }, [storeCode]);
+  }, [storeCode, brandCode]);
 
   const filteredGroups = useMemo(() => {
     if (!data?.menu_groups) return [];
@@ -212,6 +219,12 @@ export default function MenuPage({ params }) {
         title={store?.name || `Outlet ${storeCode}`}
         subtitle="Pilih Menu"
         back="/"
+        logoUrl={
+          brandCode === 'fore-coffee'
+            ? 'https://fore.coffee/wp-content/uploads/2023/03/Logo_fore_2020_color_landscape.jpg'
+            : undefined
+        }
+        logoAlt={brandCode === 'fore-coffee' ? 'Fore Coffee' : 'Kopi Kenangan'}
       />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6">

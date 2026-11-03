@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "catalog:sync": "node --env-file=.env.local scripts/sync-catalog.mjs",
-    "outlets:sync": "node --env-file=.env.local scripts/sync-outlets.mjs"
+    "outlets:sync": "node --env-file=.env.local scripts/sync-outlets.mjs",
+    "fore:sync": "node --env-file=.env.local scripts/sync-fore.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
