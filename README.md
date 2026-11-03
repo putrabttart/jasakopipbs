@@ -177,8 +177,11 @@ CRON_SECRET
 5. Buka deployment URL dan ulangi uji alur minimum.
 6. Pastikan cron pada `vercel.json` terdaftar di halaman **Settings > Cron Jobs**.
 
-`vercel.json` menjalankan `/api/cron/auto-cancel` setiap lima menit. Untuk
-external cron, kirim request berikut:
+`vercel.json` menjalankan `/api/cron/auto-cancel` sekali sehari pukul 17:00 UTC
+(00:00 WIB), sesuai batas Vercel Hobby. Cron ini menjadi pembersihan cadangan;
+order juga memeriksa timeout saat halaman pembayaran dibuka. Jika pembatalan
+harus berjalan lebih sering tanpa kunjungan pengguna, gunakan external cron dan
+kirim request berikut:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_CRON_SECRET" \
