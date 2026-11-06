@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
               <Icon.Lock size={28} />
             </div>
             <h1 className="text-xl font-bold">Admin Panel</h1>
-            <p className="text-xs opacity-80 mt-1">Jasa Order Kopi Kenangan</p>
+            <p className="text-xs opacity-80 mt-1">Jasdor PBS</p>
           </div>
 
           <div className="p-6">

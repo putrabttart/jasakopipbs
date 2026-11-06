@@ -105,7 +105,7 @@ function ClosedPage({ message }) {
 
         {/* Footer */}
         <div className="mt-10 pt-6 border-t border-ink-200">
-          <p className="text-[11px] text-ink-400">Jasa Order Kopi Kenangan</p>
+          <p className="text-[11px] text-ink-400">Jasdor PBS</p>
         </div>
       </div>
     </div>

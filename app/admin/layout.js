@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Admin · Jasa Order Kopi Kenangan',
+  title: 'Admin · Jasdor PBS',
   robots: { index: false, follow: false },
 };
 

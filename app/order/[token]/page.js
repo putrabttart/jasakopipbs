@@ -473,7 +473,7 @@ function AdminActions({ order, orderId, customerWa, customerName }) {
       `Lihat detail pesanan:`,
       confirmUrl,
       ``,
-      `Terima kasih sudah order di Jasa Order Kopi Kenangan.`,
+      `Terima kasih sudah order di Jasdor PBS.`,
     ].join('\n');
 
     const waUrl = `https://wa.me/${customerWa}?text=${encodeURIComponent(message)}`;

@@ -134,7 +134,7 @@ export default function ReferralPage() {
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
     const link = `${baseUrl}/?ref=${code}`;
     const msg = [
-      `Halo! Aku rekomendasiin layanan Jasa Order Kopi Kenangan.`,
+      `Halo! Aku rekomendasiin Jasdor PBS.`,
       ``,
       `Pakai kode referral aku: *${code}*`,
       `${link}`,

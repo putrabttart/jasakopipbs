@@ -5,8 +5,8 @@ import { StockProvider } from '@/components/StockGuard';
 import WelcomeModal from '@/components/WelcomeModal';
 
 export const metadata = {
-  title: 'Jasa Order Kopi by Iqbal',
-  description: 'Jasa order Kopi Kenangan dan Fore Coffee dengan diskon hingga 50% lewat WhatsApp.',
+  title: 'Jasdor PBS',
+  description: 'Pesan Kopi Kenangan dan Fore Coffee dengan diskon hingga 50% dari outlet terdekat.',
 };
 
 export const viewport = {

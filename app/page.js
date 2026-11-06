@@ -185,169 +185,95 @@ export default function HomePage({ searchParams }) {
   const products = currentGroup?.menu_products || [];
 
   return (
-    <main className="pb-24">
-      <Header title="Jasa Order Kopi" subtitle="JasdorAja" />
+    <main className="pb-24 overflow-hidden">
+      <Header title="Jasdor PBS" subtitle="Jasa Order Kopi" />
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 pt-3 md:pt-4">
-        <section className="mb-3">
-          <p className="text-[10px] uppercase tracking-wider font-semibold text-ink-500 mb-2">
-            Pilih Brand
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {BRANDS.map((item) => (
-              <a
-                key={item.code}
-                href={`/?brand=${encodeURIComponent(item.code)}`}
-                className={
-                  'rounded-xl border px-3 py-2.5 text-sm font-semibold text-center transition ' +
-                  (brand === item.code
-                    ? 'bg-ink-900 text-white border-ink-900'
-                    : 'bg-white text-ink-700 border-ink-200')
-                }
-              >
-                {item.name}
-              </a>
-            ))}
+      <div className="max-w-7xl mx-auto px-5 md:px-8 pt-7 md:pt-10">
+        <section ref={searchSectionRef} className="border-b border-ink-200 pb-8 md:pb-10">
+          <div className="max-w-3xl">
+            <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-accent-600 mb-3">
+              Jasdor PBS
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-[-0.045em] leading-[1.02] text-ink-900">
+              Kopi favorit, lebih hemat.
+            </h2>
+            <p className="text-sm md:text-base leading-6 text-ink-500 mt-3">
+              Pesan dari outlet terdekat dengan diskon 50% hingga Rp35.000.
+            </p>
           </div>
-        </section>
-        {/* Pilih Outlet CTA - prominent above search */}
-        <section ref={searchSectionRef}>
-          <button
-            type="button"
-            onClick={() => searchInputRef.current?.focus()}
-            className="w-full bg-gradient-to-r from-ink-900 to-accent-700 text-white rounded-2xl p-4 flex items-center gap-3 hover:opacity-95 active:scale-[.99] transition shadow-card"
-          >
-            <div className="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur grid place-items-center shrink-0">
-              <Icon.Pin size={22} />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="text-[10px] uppercase tracking-wider opacity-70 font-semibold">
-                Pilih Outlet
-              </p>
-              <p className="text-sm font-bold mt-0.5">
-                Cari outlet {BRANDS.find((item) => item.code === brand)?.name} terdekat
-              </p>
-            </div>
-            <Icon.ChevronRight size={20} className="opacity-70" />
-          </button>
 
-          {/* Search field */}
-          <form
-            onSubmit={onSubmit}
-            className="mt-2.5 flex items-center gap-2 bg-white border border-ink-200 rounded-2xl px-4 py-2.5 focus-within:border-ink-900 transition"
-          >
-            <span className="text-ink-500"><Icon.Search size={18} /></span>
-            <input
-              ref={searchInputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ketik nama daerah atau kota"
-              className="flex-1 bg-transparent text-sm text-ink-900 placeholder:text-ink-400 outline-none py-1"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={clearSearch}
-                className="text-ink-400 hover:text-ink-900 px-1"
-                aria-label="Hapus"
-              >
-                <Icon.Close size={14} />
-              </button>
-            )}
-            <button
-              type="submit"
-              className="bg-ink-900 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg hover:bg-ink-800 active:scale-95 transition"
-            >
-              Cari
-            </button>
-          </form>
-        </section>
-
-        {/* Quick chips */}
-        {!searched && (
-          <section className="mt-3">
-            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-              <span className="shrink-0 text-[11px] font-medium text-ink-500 self-center mr-1">
-                Populer:
-              </span>
-              {['Rancamaya', 'Bogor', 'Jakarta', 'Bandung', 'Depok', 'Bekasi'].map((p) => (
-                <button
-                  key={p}
-                  onClick={() => {
-                    setQuery(p);
-                    search(p, 1, false);
-                  }}
-                  className="shrink-0 text-xs bg-white border border-ink-200 px-3 py-1.5 rounded-full hover:border-ink-900 hover:bg-ink-900 hover:text-white text-ink-700 transition"
+          <div className="grid lg:grid-cols-[300px_1fr] gap-3 mt-7 max-w-5xl">
+            <div className="flex gap-1 p-1 rounded-full border border-ink-200 bg-white">
+              {BRANDS.map((item) => (
+                <a
+                  key={item.code}
+                  href={`/?brand=${encodeURIComponent(item.code)}`}
+                  className={
+                    'flex-1 rounded-full px-3 py-3 text-xs font-semibold text-center transition ' +
+                    (brand === item.code
+                      ? 'bg-ink-900 text-white'
+                      : 'text-ink-500 hover:text-ink-900')
+                  }
                 >
-                  {p}
-                </button>
+                  {item.name}
+                </a>
               ))}
             </div>
-          </section>
-        )}
-
-        {/* Promo banner */}
-        {!searched && (
-          <section className="mt-4">
-            <div className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-3.5 flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-white grid place-items-center shrink-0 shadow-soft text-accent-600">
-                <Icon.Gift size={20} />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-ink-900">Diskon 50% Otomatis</p>
-                <p className="text-[11px] text-ink-700 mt-0.5 leading-snug">
-                  Maks Rp 35.000 per pesanan. Pisah pesanan untuk dapat 2× potongan.
-                </p>
-              </div>
+            <form
+              onSubmit={onSubmit}
+              className="flex items-center gap-3 bg-white border border-ink-200 rounded-full p-1.5 pl-5 focus-within:border-ink-900 focus-within:shadow-card transition"
+            >
+              <span className="text-ink-500"><Icon.Search size={18} /></span>
+              <input
+                ref={searchInputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Cari daerah atau kota"
+                className="flex-1 min-w-0 bg-transparent text-sm text-ink-900 placeholder:text-ink-400 outline-none py-2"
+              />
+              {query && (
+                <button type="button" onClick={clearSearch} className="text-ink-400 hover:text-ink-900 px-1" aria-label="Hapus">
+                  <Icon.Close size={14} />
+                </button>
+              )}
+              <button type="submit" className="bg-ink-900 text-white text-xs font-semibold px-6 py-3 rounded-full hover:bg-accent-700 active:scale-95 transition">
+                Cari outlet
+              </button>
+            </form>
+          </div>
+          {!searched && (
+            <div className="lg:ml-[312px] mt-3 flex gap-2 overflow-x-auto no-scrollbar max-w-2xl">
+              <span className="shrink-0 text-[11px] text-ink-400 self-center mr-1">Pencarian populer</span>
+              {['Bogor', 'Jakarta', 'Bandung', 'Depok', 'Bekasi'].map((p) => (
+                <button key={p} onClick={() => { setQuery(p); search(p, 1, false); }} className="shrink-0 text-xs text-ink-600 px-3 py-1.5 rounded-full border border-ink-200 hover:border-ink-500 hover:text-ink-900 transition">{p}</button>
+              ))}
             </div>
-          </section>
-        )}
+          )}
+        </section>
 
-        {/* Testimoni CTA */}
         {!searched && (
-          <section className="mt-3">
-            <Link
-              href="/testimonials"
-              className="w-full rounded-2xl bg-white border border-ink-200 p-3.5 flex items-center gap-3 hover:border-ink-900 hover:shadow-card transition active:scale-[.99]"
-            >
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 grid place-items-center shrink-0 text-emerald-600 border border-emerald-200">
-                <Icon.Coffee size={20} />
-              </div>
-              <div className="flex-1 text-left">
-                <p className="text-sm font-bold text-ink-900">Lihat Testimoni</p>
-                <p className="text-[11px] text-ink-500 mt-0.5 leading-snug">
-                  Bukti pesanan pelanggan yang sudah sampai
-                </p>
-              </div>
-              <Icon.ChevronRight size={18} className="text-ink-400 shrink-0" />
+          <section className="grid md:grid-cols-3 border-b border-ink-200">
+            <div className="py-7 md:pr-8 border-b md:border-b-0 md:border-r border-ink-200">
+              <span className="text-[10px] font-bold tracking-[.2em] text-accent-600">01</span>
+              <h3 className="font-bold text-ink-900 mt-3">Diskon 50% otomatis</h3>
+              <p className="text-xs text-ink-500 leading-5 mt-1.5">Potongan maksimal Rp35.000 langsung untuk setiap pesanan.</p>
+            </div>
+            <Link href="/testimonials" className="group py-7 md:px-8 border-b md:border-b-0 md:border-r border-ink-200">
+              <span className="text-[10px] font-bold tracking-[.2em] text-accent-600">02</span>
+              <h3 className="font-bold text-ink-900 mt-3 flex items-center justify-between">Pesanan nyata <Icon.ArrowRight size={15} className="group-hover:translate-x-1 transition" /></h3>
+              <p className="text-xs text-ink-500 leading-5 mt-1.5">Lihat testimoni pelanggan yang pesanannya sudah sampai.</p>
             </Link>
-          </section>
-        )}
-
-        {/* Referral CTA */}
-        {!searched && (
-          <section className="mt-3">
-            <Link
-              href="/referral"
-              className="w-full rounded-2xl bg-gradient-to-r from-accent-600 to-accent-700 text-white p-3.5 flex items-center gap-3 hover:opacity-95 active:scale-[.99] transition shadow-card"
-            >
-              <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur grid place-items-center shrink-0">
-                <Icon.Gift size={20} />
-              </div>
-              <div className="flex-1 text-left">
-                <p className="text-sm font-bold">Program Referral</p>
-                <p className="text-[11px] opacity-90 mt-0.5 leading-snug">
-                  Ajak teman, dapat saldo Rp 2.000 bisa ditarik ke e-wallet
-                </p>
-              </div>
-              <Icon.ChevronRight size={18} className="opacity-80 shrink-0" />
+            <Link href="/referral" className="group py-7 md:pl-8">
+              <span className="text-[10px] font-bold tracking-[.2em] text-accent-600">03</span>
+              <h3 className="font-bold text-ink-900 mt-3 flex items-center justify-between">Ajak teman <Icon.ArrowRight size={15} className="group-hover:translate-x-1 transition" /></h3>
+              <p className="text-xs text-ink-500 leading-5 mt-1.5">Dapatkan saldo Rp2.000 yang bisa ditarik ke e-wallet.</p>
             </Link>
           </section>
         )}
 
         {/* Search results */}
         {searched && (
-          <section className="mt-5">
+          <section className="py-10 max-w-4xl mx-auto">
             <div className="flex items-baseline justify-between mb-3">
               <h3 className="text-sm font-semibold text-ink-900">
                 Hasil &ldquo;{query}&rdquo;
@@ -385,7 +311,7 @@ export default function HomePage({ searchParams }) {
 
             {!loading && stores.length > 0 && (
               <>
-                <div className="space-y-2.5">
+                <div className="bg-white border-y border-ink-200 divide-y divide-ink-200">
                   {stores.map((s) => (
                     <StoreCard key={s.id} store={s} onSelect={() => setStore(s)} />
                   ))}
@@ -416,21 +342,22 @@ export default function HomePage({ searchParams }) {
 
         {/* Preview Menu */}
         {!searched && (
-          <section className="mt-6">
-            <div className="flex items-baseline justify-between mb-3">
+          <section className="pt-12 md:pt-20">
+            <div className="flex items-end justify-between mb-7 md:mb-10">
               <div>
-                <h3 className="text-base font-bold text-ink-900">
+                <p className="text-[10px] uppercase tracking-[.25em] font-bold text-accent-600 mb-2">Pilihan hari ini</p>
+                <h3 className="text-3xl md:text-4xl tracking-tight font-bold text-ink-900">
                   Menu {BRANDS.find((item) => item.code === brand)?.name}
                 </h3>
-                <p className="text-[11px] text-ink-500 mt-0.5">
-                  Preview menu — pilih outlet untuk pesan
+                <p className="text-sm text-ink-500 mt-2">
+                  Pilih outlet terlebih dahulu untuk mulai memesan.
                 </p>
               </div>
             </div>
 
             {/* Tabs */}
             {previewMenu.length > 0 && (
-              <div className="sticky top-16 bg-ink-50/95 backdrop-blur z-20 -mx-4 px-4 py-2 border-b border-ink-200">
+              <div className="sticky top-[71px] bg-[#f7f6f2]/95 backdrop-blur z-20 -mx-5 md:-mx-8 px-5 md:px-8 py-3 border-y border-ink-200">
                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                   {previewMenu.map((g) => (
                     <button
@@ -439,8 +366,8 @@ export default function HomePage({ searchParams }) {
                       className={
                         'shrink-0 text-xs font-medium px-3.5 py-2 rounded-full transition active:scale-95 ' +
                         (activeGroup === g.group_code
-                          ? 'bg-ink-900 text-white'
-                          : 'bg-white text-ink-700 border border-ink-200 hover:border-ink-400')
+                         ? 'bg-ink-900 text-white'
+                           : 'text-ink-600 border border-transparent hover:border-ink-300')
                       }
                     >
                       {g.group_name}
@@ -450,9 +377,9 @@ export default function HomePage({ searchParams }) {
               </div>
             )}
 
-            <div className="mt-3">
+             <div className="mt-7">
               {previewLoading ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 md:gap-x-5 gap-y-8">
                   {[...Array(6)].map((_, i) => (
                     <div key={i} className="h-64 rounded-2xl shimmer" />
                   ))}
@@ -470,7 +397,7 @@ export default function HomePage({ searchParams }) {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 md:gap-x-5 gap-y-8">
                   {products.map((p) => (
                     <PreviewProductCard
                       key={p.id}
@@ -499,44 +426,36 @@ function StoreCard({ store, onSelect }) {
     <Link
       href={`/menu/${store.code}?brand=${encodeURIComponent(store.brand_code || 'kopi-kenangan')}`}
       onClick={onSelect}
-      className="group block rounded-2xl bg-white border border-ink-200 overflow-hidden hover:border-ink-900 transition fade-up"
+      className="group block hover:bg-ink-50 transition fade-up"
     >
-      <div className="flex gap-3 p-3">
-        <div className="w-20 h-20 rounded-xl bg-ink-100 overflow-hidden shrink-0">
-          {store.image_url ? (
-            <img
-              src={store.image_url}
-              alt={store.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-ink-400">
-              <Icon.Store size={28} />
-            </div>
-          )}
+      <div className="flex gap-4 px-1 py-5 sm:px-5 sm:py-6 items-start">
+        <div className="w-10 h-10 rounded-full border border-ink-200 bg-[#f7f6f2] grid place-items-center text-ink-500 shrink-0">
+          <Icon.Pin size={17} />
         </div>
-        <div className="flex-1 min-w-0 flex flex-col">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-semibold text-sm text-ink-900 truncate">{store.name}</h3>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-bold text-sm text-ink-900">{store.name}</h3>
             {store.is_open ? (
-              <span className="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium border border-emerald-200">
+                  <span className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider">
                 Buka
               </span>
             ) : (
-              <span className="text-[9px] bg-ink-100 text-ink-600 px-1.5 py-0.5 rounded-full font-medium">
+                  <span className="text-[9px] text-ink-400 font-bold uppercase tracking-wider">
                 Tutup
               </span>
             )}
+              </div>
+              <p className="text-xs text-ink-500 mt-1 line-clamp-2 leading-5">{store.address}</p>
+            </div>
+            <span className="w-9 h-9 rounded-full border border-ink-200 grid place-items-center text-ink-700 shrink-0 group-hover:bg-ink-900 group-hover:text-white group-hover:border-ink-900 transition">
+              <Icon.ArrowRight size={14} />
+            </span>
           </div>
-          <p className="text-[11px] text-ink-500 mt-0.5 line-clamp-2">{store.address}</p>
-          <div className="flex items-center justify-between mt-auto pt-1.5">
-            <span className="text-[10px] text-ink-500 inline-flex items-center gap-1">
-              <Icon.Clock size={10} />
+          <div className="mt-2 text-[10px] text-ink-400 inline-flex items-center gap-1.5">
+              <Icon.Clock size={11} />
               {store.open?.slice(0, 5)} - {store.close?.slice(0, 5)}
-            </span>
-            <span className="text-xs font-semibold text-ink-900 inline-flex items-center gap-1 group-hover:gap-1.5 transition-all">
-              Pesan <Icon.ArrowRight size={12} />
-            </span>
           </div>
         </div>
       </div>
@@ -552,14 +471,14 @@ function PreviewProductCard({ product, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group text-left rounded-2xl bg-white border border-ink-200 overflow-hidden flex flex-col fade-up hover:border-ink-900 hover:shadow-card transition active:scale-[.98]"
+      className="group text-left flex flex-col fade-up active:scale-[.98] transition"
     >
-      <div className="aspect-square bg-ink-100 relative overflow-hidden">
+      <div className="aspect-square rounded-[1.25rem] bg-ink-100 relative overflow-hidden">
         {product.image ? (
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500"
             loading="lazy"
           />
         ) : (
@@ -568,18 +487,18 @@ function PreviewProductCard({ product, onClick }) {
           </div>
         )}
         {origPrice > 0 && (
-          <span className="absolute top-2 left-2 bg-ink-900 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+          <span className="absolute top-3 left-3 bg-white/95 text-ink-900 text-[9px] tracking-wider font-bold px-2.5 py-1.5 rounded-full shadow-soft">
             HEMAT 50%
           </span>
         )}
       </div>
-      <div className="p-2.5 md:p-3 flex-1 flex flex-col">
-        <h3 className="text-xs md:text-sm font-semibold leading-tight line-clamp-2 min-h-[2.4em] text-ink-900">
+      <div className="pt-3 flex-1 flex flex-col">
+        <h3 className="text-sm font-semibold leading-snug line-clamp-2 min-h-[2.7em] text-ink-900 group-hover:text-accent-700 transition">
           {product.name}
         </h3>
-        <div className="mt-auto pt-2">
+        <div className="mt-auto pt-1.5">
           <div className="flex items-baseline gap-1.5 flex-wrap">
-            <span className="text-sm font-bold text-ink-900">{rupiah(finalPrice)}</span>
+            <span className="text-sm font-bold text-accent-700">{rupiah(finalPrice)}</span>
             {origPrice > finalPrice && (
               <span className="text-[10px] line-through text-ink-400">{rupiah(origPrice)}</span>
             )}

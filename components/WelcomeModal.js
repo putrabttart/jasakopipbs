@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Icon } from './Icons';
 
-const STORAGE_KEY = 'jasdor-welcome-seen-v1';
+const STORAGE_KEY = 'jasdor-welcome-seen-v2';
 
 export default function WelcomeModal() {
   const [open, setOpen] = useState(false);
@@ -42,76 +42,64 @@ export default function WelcomeModal() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-5">
       <div
-        className="absolute inset-0 bg-ink-900/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-ink-950/55 backdrop-blur-[2px]"
         onClick={close}
       />
 
-      <div className="relative w-full md:max-w-lg bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden fade-up">
-        {/* Header sederhana */}
-        <div className="px-6 pt-7 pb-5 text-center border-b border-ink-100">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-accent-50 grid place-items-center mb-3 text-accent-600">
-            <Icon.Gift size={32} />
+      <div className="relative w-full sm:max-w-md bg-[#f7f6f2] rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl overflow-hidden fade-up">
+        <button
+          type="button"
+          onClick={close}
+          className="absolute right-5 top-5 w-9 h-9 rounded-full border border-ink-200 bg-white grid place-items-center text-ink-500 hover:text-ink-900 hover:border-ink-400 transition"
+          aria-label="Tutup"
+        >
+          <Icon.Close size={15} />
+        </button>
+
+        <div className="px-6 sm:px-8 pt-8 pb-6">
+          <div className="w-11 h-11 rounded-full bg-ink-900 text-white grid place-items-center mb-6">
+            <Icon.Coffee size={20} />
           </div>
-          <h2 className="text-xl md:text-2xl font-bold text-ink-900">
-            Selamat datang!
+          <p className="text-[10px] uppercase tracking-[.25em] font-bold text-accent-600">
+            Sebelum memesan
+          </p>
+          <h2 className="text-2xl sm:text-3xl tracking-tight font-bold text-ink-900 mt-2">
+            Ngopi lebih hemat di Jasdor PBS.
           </h2>
-          <p className="text-sm text-ink-600 mt-1">
-            Jasa Order <span className="font-semibold text-ink-900">Kopi Kenangan</span>
+          <p className="text-sm text-ink-500 leading-6 mt-3">
+            Setiap pesanan mendapat diskon 50% dengan potongan maksimal Rp35.000.
           </p>
         </div>
 
-        {/* Big highlight */}
-        <div className="px-6 pt-5">
-          <div className="rounded-2xl bg-ink-900 text-white p-5 text-center">
-            <p className="text-xs uppercase tracking-wider opacity-70 font-semibold">
-              Setiap pesanan dapat
-            </p>
-            <p className="text-3xl md:text-4xl font-extrabold mt-1">
-              Diskon 50%
-            </p>
-            <p className="text-sm opacity-90 mt-1">
-              maksimal potongan{' '}
-              <span className="font-bold text-accent-200">Rp 35.000</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Tip utama */}
-        <div className="px-6 pt-5">
-          <div className="rounded-2xl border-2 border-dashed border-accent-300 bg-accent-50 p-4">
-            <p className="text-sm font-bold text-ink-900 flex items-center gap-2">
-              <span className="text-accent-600"><Icon.Info size={18} /></span> Tips Hemat Maksimal
-            </p>
-            <p className="text-sm text-ink-700 mt-1.5 leading-relaxed">
-              Kalau total belanja kamu <b>lebih dari Rp 70.000</b>, pisah jadi{' '}
-              <b>2 pesanan terpisah</b>. Diskon jadi 2x lipat!
-            </p>
-
-            {/* Contoh */}
-            <div className="mt-3 grid grid-cols-2 gap-2 text-center">
-              <div className="rounded-xl bg-white border border-ink-200 p-3">
-                <p className="text-[10px] font-semibold text-red-500 uppercase tracking-wider">
-                  ✕ Kurang hemat
-                </p>
-                <p className="text-xs text-ink-500 mt-1">1 pesanan Rp 100.000</p>
-                <p className="text-sm font-bold text-ink-900 mt-1">Hemat Rp 35rb</p>
-              </div>
-              <div className="rounded-xl bg-emerald-50 border-2 border-emerald-400 p-3">
-                <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">
-                  ✓ Lebih hemat
-                </p>
-                <p className="text-xs text-ink-500 mt-1">2× pesanan Rp 50rb</p>
-                <p className="text-sm font-bold text-emerald-600 mt-1">Hemat Rp 50rb</p>
-              </div>
+        <div className="mx-6 sm:mx-8 border-y border-ink-200 py-5">
+          <div className="flex gap-4">
+            <span className="w-8 h-8 rounded-full border border-accent-300 text-accent-600 grid place-items-center shrink-0">
+              <Icon.Info size={15} />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-ink-900">Tips hemat maksimal</p>
+              <p className="text-xs sm:text-sm text-ink-500 mt-1 leading-5">
+                Jika total lebih dari Rp70.000, pisahkan menjadi dua pesanan agar potongannya bisa lebih besar.
+              </p>
             </div>
           </div>
+          <div className="mt-4 ml-12 flex items-center gap-3 text-xs">
+            <span className="text-ink-400 line-through">1 pesanan: hemat Rp35rb</span>
+            <Icon.ArrowRight size={13} className="text-ink-400" />
+            <span className="font-bold text-emerald-700">2 pesanan: hemat Rp50rb</span>
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="px-6 pt-5 pb-5">
-          <label className="flex items-center gap-2 text-xs text-ink-600 select-none cursor-pointer mb-3">
+        <div className="px-6 sm:px-8 pt-5 pb-6 sm:pb-8">
+          <button
+            onClick={close}
+            className="w-full bg-ink-900 text-white text-sm font-semibold py-3.5 rounded-full hover:bg-ink-800 active:scale-[.98] transition"
+          >
+            Mulai cari outlet
+          </button>
+          <label className="flex justify-center items-center gap-2 text-xs text-ink-500 select-none cursor-pointer mt-4">
             <input
               type="checkbox"
               checked={dontShow}
@@ -120,12 +108,6 @@ export default function WelcomeModal() {
             />
             Jangan tampilkan lagi
           </label>
-          <button
-            onClick={close}
-            className="w-full bg-ink-900 text-white text-base font-semibold py-4 rounded-2xl hover:bg-ink-800 active:scale-[.98] transition"
-          >
-            Saya Mengerti, Mulai Pesan
-          </button>
         </div>
       </div>
     </div>
